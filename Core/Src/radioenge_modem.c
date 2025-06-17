@@ -3,6 +3,8 @@
 #include "uart_at.h"
 #include "main.h"
 #include <string.h>
+#include <stdio.h>
+#include "cmsis_os2.h"
 
 volatile JOINED_STATE gJoinedFSM = JOINED_TX;
 volatile RADIO_STATE gRadioState = RADIO_RESET;
@@ -40,14 +42,15 @@ void LoRaWAN_JoinCallback(ATResponse response)
         else
         {
             gConsecutiveJoinErrors++;
-            if(gConsecutiveJoinErrors==9) //radioenge modem stops after 9 join errors
+            if(gConsecutiveJoinErrors>=5) //radioenge modem stops after 9 join errors
             {
+                gConsecutiveJoinErrors = 0;
                 SetRadioState(RADIO_RESET);
             }
         }
         osThreadFlagsSet(ModemMngrTaskHandle, 0x01);
-    }
-    osSemaphoreRelease(RadioStateSemaphoreHandle);
+    }  
+    osSemaphoreRelease(RadioStateSemaphoreHandle);    
 }
 
 void DutyCycleTimerCallback (void *argument) 
@@ -280,6 +283,10 @@ osStatus_t LoRaSendBNow(uint32_t LoraWANPort, uint8_t* msg, size_t size)
         {
             SetRadioState(RADIO_DUTYCYCLED);
             ret = osOK;
+        }
+        else
+        {
+            SetRadioState(RADIO_RESET);
         }
     }
     osSemaphoreRelease(RadioStateSemaphoreHandle);
