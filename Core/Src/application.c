@@ -1,7 +1,7 @@
 #include "cmsis_os.h"
 #include "stm32f4xx_hal.h"
 #include "radioenge_modem.h"
-//test
+//testando
 extern osTimerId_t PeriodicSendTimerHandle;
 extern osThreadId_t AppSendTaskHandle;
 extern ADC_HandleTypeDef hadc1;
