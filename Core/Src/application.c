@@ -8,17 +8,11 @@ extern ADC_HandleTypeDef hadc1;
 extern osEventFlagsId_t ModemStatusFlagsHandle;
 extern TIM_HandleTypeDef htim3;
 
-
 void LoRaWAN_RxEventCallback(uint8_t *data, uint32_t length, uint32_t port, int32_t rssi, int32_t snr)
 {
-
 }
 
 void PeriodicSendTimerCallback(void *argument)
-{
-}
-
-void PeriodicSendTimerCallback (void *argument) 
 {
     osThreadFlagsSet(AppSendTaskHandle, 0x01);
 }
@@ -33,7 +27,7 @@ void AppSendTaskCode(void *argument)
     osTimerStart(PeriodicSendTimerHandle, 30000U);
 
     while (1)
-    {        
+    {
         LoRaWaitDutyCycle();
         HAL_ADC_Start(&hadc1);
         HAL_ADC_PollForConversion(&hadc1, 100);
@@ -41,6 +35,6 @@ void AppSendTaskCode(void *argument)
         temp = (int32_t)(330 * ((float)read / 4096));
         LoRaSendBNow(2, (uint8_t *)&temp, sizeof(int32_t));
         osThreadFlagsClear(0x01);
-        osThreadFlagsWait(0x01, osFlagsWaitAny, osWaitForever);        
+        osThreadFlagsWait(0x01, osFlagsWaitAny, osWaitForever);
     }
 }

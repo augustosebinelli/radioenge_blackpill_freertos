@@ -168,14 +168,6 @@ const osTimerAttr_t PeriodicSendTimer_attributes = {
   .cb_mem = &PeriodicSendTimerControlBlock,
   .cb_size = sizeof(PeriodicSendTimerControlBlock),
 };
-/* Definitions for PeriodicSendTimer */
-osTimerId_t PeriodicSendTimerHandle;
-osStaticTimerDef_t PeriodicSendTimerControlBlock;
-const osTimerAttr_t PeriodicSendTimer_attributes = {
-  .name = "PeriodicSendTimer",
-  .cb_mem = &PeriodicSendTimerControlBlock,
-  .cb_size = sizeof(PeriodicSendTimerControlBlock),
-};
 /* Definitions for ModemLedTimer */
 osTimerId_t ModemLedTimerHandle;
 osStaticTimerDef_t ModemLedTimerControlBlock;
