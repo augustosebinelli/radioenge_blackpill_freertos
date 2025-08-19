@@ -22,7 +22,7 @@ TARGET = helloblackpillSTM32F411CEUx
 # debug build?
 DEBUG = 1
 # optimization
-OPT = -O0
+OPT = -O0 -Wno-implicit-function-declaration
 
 
 #######################################

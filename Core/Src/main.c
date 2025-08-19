@@ -168,6 +168,14 @@ const osTimerAttr_t PeriodicSendTimer_attributes = {
   .cb_mem = &PeriodicSendTimerControlBlock,
   .cb_size = sizeof(PeriodicSendTimerControlBlock),
 };
+/* Definitions for PeriodicSendTimer */
+osTimerId_t PeriodicSendTimerHandle;
+osStaticTimerDef_t PeriodicSendTimerControlBlock;
+const osTimerAttr_t PeriodicSendTimer_attributes = {
+  .name = "PeriodicSendTimer",
+  .cb_mem = &PeriodicSendTimerControlBlock,
+  .cb_size = sizeof(PeriodicSendTimerControlBlock),
+};
 /* Definitions for ModemLedTimer */
 osTimerId_t ModemLedTimerHandle;
 osStaticTimerDef_t ModemLedTimerControlBlock;
@@ -404,7 +412,6 @@ int main(void)
 
   /* Start scheduler */
   osKernelStart();
-
   /* We should never get here as control is now taken by the scheduler */
 
   /* Infinite loop */
@@ -413,9 +420,9 @@ int main(void)
   {
     for (i = 0; i < 8; i++)
     {
-      HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, 0);
+      HAL_GPIO_WritePin(KIT_LED_GPIO_Port, KIT_LED_Pin, 0);
       HAL_Delay(25);
-      HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, 1);
+      HAL_GPIO_WritePin(KIT_LED_GPIO_Port, KIT_LED_Pin, 1);
       HAL_Delay(50);
     }
     HAL_Delay(800);

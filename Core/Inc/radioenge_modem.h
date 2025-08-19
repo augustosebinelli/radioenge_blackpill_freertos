@@ -29,5 +29,6 @@ osStatus_t LoRaSendB(uint32_t LoraWANPort, uint8_t* msg, size_t size);
 void LoRaWaitDutyCycle();
 osStatus_t LoRaSendNow(uint32_t LoraWANPort, uint8_t* msg);
 osStatus_t LoRaSendBNow(uint32_t LoraWANPort, uint8_t* msg, size_t size);
+void SetRadioState(RADIO_STATE state);
 
 #endif

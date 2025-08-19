@@ -8,6 +8,8 @@
         "string_view": "c",
         "uartringbufdma.h": "c",
         "semphr.h": "c",
-        "main.h": "c"
+        "main.h": "c",
+        "string.h": "c",
+        "radioenge_modem.h": "c"
     }
 }

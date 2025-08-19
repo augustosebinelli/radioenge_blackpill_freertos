@@ -1,10 +1,16 @@
 // For format details, see https://aka.ms/devcontainer.json. For config options, see the README at:
 // https://github.com/microsoft/vscode-dev-containers/tree/v0.245.2/containers/docker-existing-dockerfile
 {
-    "name": "Existing Dockerfile",
-    // Sets the run context to one level up instead of the .devcontainer folder.
-    "context": "..",
-    "dockerFile": "./Dockerfile",
+    // uncomment this to create a container from an existing Dockerfile.
+    // "name": "Existing Dockerfile",
+    // // Sets the run context to one level up instead of the .devcontainer folder.
+    // "context": "..",
+    // "dockerFile": "./Dockerfile",
+
+    //use pre-built image from Docker Hub
+    "name": "ARM Baremetal Development",
+    "image": "glmoritz/arm-baremetal-dev-vscode:latest",
+
     // Update the 'dockerFile' property if you aren't using the standard 'Dockerfile' filename.
     // "dockerFile": "Dockerfile",
     //"image": "registry.gitlab.com/dkrasutski/loko_air/loko:1.0",
@@ -19,6 +25,7 @@
     // "mounts": [ "source=/var/run/docker.sock,target=/var/run/docker.sock,type=bind" ],
     // Uncomment to connect as a non-root user if you've added one. See https://aka.ms/vscode-remote/containers/non-root.
     // "remoteUser": "vscode"    // Add the IDs of extensions you want installed when the container is created.
+    "runArgs": [ "--privileged"],
     "customizations": {
         "vscode": {
             "extensions": [        

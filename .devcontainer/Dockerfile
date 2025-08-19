@@ -1,33 +1,14 @@
-ARG VARIANT="focal"
-FROM mcr.microsoft.com/vscode/devcontainers/base:0-${VARIANT}
-ARG VARIANT
+# Use stock Ubuntu 24.04 (Noble Numbat)
+FROM ubuntu:24.04
 
-ENV REFRESHED_AT 2023-02-15
+ENV DEBIAN_FRONTEND=noninteractive
+ENV REFRESHED_AT=2025-08-18
 
-# build commands to build and tag image (from root project directory):
-# !!! DONT FORGET TO CHANGE TAG (VERSION) !!!
-# docker login registry.gitlab.com -u dkrasutski
-# <type your gitlab password>
-# docker build -t registry.gitlab.com/dkrasutski/loko_air/loko:X.Y -f ./.devcontainer/Dockerfile .
-# docker push registry.gitlab.com/dkrasutski/loko_air/loko:X.Y
-# Manually build the Docker image: docker build -f .devcontainer/Dockerfile .
+RUN echo "deb http://security.ubuntu.com/ubuntu focal-security main universe" > /etc/apt/sources.list.d/ubuntu-focal-sources.list
 
-#Install CLang keys
-# RUN wget -qO- https://apt.llvm.org/llvm-snapshot.gpg.key | tee /etc/apt/trusted.gpg.d/apt.llvm.org.asc
-# RUN echo "\n\n"\
-#     "deb http://apt.llvm.org/focal/ llvm-toolchain-focal main\n"\
-#     "deb-src http://apt.llvm.org/focal/ llvm-toolchain-focal main\n"\
-#     "# 16\n"\
-#     "deb http://apt.llvm.org/focal/ llvm-toolchain-focal-16 main\n"\
-#     "deb-src http://apt.llvm.org/focal/ llvm-toolchain-focal-16 main\n"\
-#     "# 15\n"\
-#     "deb http://apt.llvm.org/focal/ llvm-toolchain-focal-15 main\n"\
-#     "deb-src http://apt.llvm.org/focal/ llvm-toolchain-focal-15 main\n" >> /etc/apt/sources.list
-
-RUN apt-get update \
-    && export DEBIAN_FRONTEND=noninteractive \
-    && apt-get -y install --no-install-recommends software-properties-common \    
-    && apt-get -y install \
+# Install dependencies
+RUN apt update \
+    && apt -y install --no-install-recommends \
     python3-dev \
     python3-pip \
     git \
@@ -43,39 +24,38 @@ RUN apt-get update \
     libtool \
     gcc-multilib \
     g++-multilib \
-    bc \    
+    bc \
     unzip \
     device-tree-compiler \
-    tcl-dev \    
-    && apt-get remove -y software-properties-common \
+    tcl-dev \
+    wget \
+    ca-certificates \
+    stlink-tools \
+    openssh-client \
     && rm -rf /var/lib/apt/lists/*
 
-# COPY ./.devcontainer/llvm.sh /opt/llvm.sh
-# RUN /opt/llvm.sh
+# Update PIP and install Python tools
+# RUN pip3 install --no-cache-dir --upgrade pip \
+#     && pip3 install commitizen pycryptodome kconfiglib pre-commit
 
-# Update PIP
-RUN pip3 install --no-cache-dir --upgrade pip
-RUN pip3 install commitizen pycryptodome kconfiglib pre-commit
-
-# Set up a tools dev directory
+# # Set up a tools dev directory
 WORKDIR /usr
 
-# Download ARM GNU toolchain
-                                                                                                                                
-RUN wget -q --show-progress --progress=bar:force:noscroll --no-check-certificate --output-document=gnu_gcc_arm.tar.xz https://developer.arm.com/-/media/Files/downloads/gnu/14.3.rel1/binrel/arm-gnu-toolchain-14.3.rel1-x86_64-arm-none-eabi.tar.xz \
+# # Download and install ARM GNU toolchain
+RUN wget -q --show-progress --progress=bar:force:noscroll --no-check-certificate \
+    --output-document=gnu_gcc_arm.tar.xz \
+    https://developer.arm.com/-/media/Files/downloads/gnu/14.3.rel1/binrel/arm-gnu-toolchain-14.3.rel1-x86_64-arm-none-eabi.tar.xz \
     && tar -xJf gnu_gcc_arm.tar.xz \
     && rm gnu_gcc_arm.tar.xz
 
+# # Extract the actual directory name and add to PATH
+RUN TOOLCHAIN_DIR=$(find /usr -maxdepth 1 -type d -name "arm-gnu-toolchain*" -print -quit) \
+    && echo "Found toolchain at: ${TOOLCHAIN_DIR}" \
+    && echo "export PATH=${TOOLCHAIN_DIR}/bin:\$PATH" >> /etc/profile.d/arm-toolchain.sh
 
-# Extract the actual directory name from the download
-RUN TOOLCHAIN_DIR=$(find /usr -maxdepth 1 -type d -name "arm-gnu-toolchain*" -print -quit) && \
-    echo "Found toolchain at: ${TOOLCHAIN_DIR}" && \
-    echo "export PATH=${TOOLCHAIN_DIR}/bin:\$PATH" >> /etc/profile.d/arm-toolchain.sh
+ENV PATH=/usr/arm-gnu-toolchain-14.3.rel1-x86_64-arm-none-eabi/bin:$PATH
 
-# Set environment variables for the current build
-ENV PATH /usr/arm-gnu-toolchain-14.3.rel1-x86_64-arm-none-eabi/bin:$PATH
-
-
+# Custom bash prompt
 RUN echo "__bash_prompt() {\n" \
     "    local userpart='\`export XIT=\$? " \
     "        && [ ! -z \"\${GITHUB_USER}\" ] && echo -n \"\[\033[0;32m\]@\${GITHUB_USER} \" || echo -n \"\[\033[0;32m\]\u \" " \
@@ -96,4 +76,4 @@ RUN echo "__bash_prompt() {\n" \
     "    PS1=\"\${userpart} \${lightblue}\w \${gitbranch}\${removecolor}\\$ \"\n" \
     "    unset -f __bash_prompt\n" \
     "}\n" \
-    "__bash_prompt" \ >> ~/.bashrc
+    "__bash_prompt" >> ~/.bashrc

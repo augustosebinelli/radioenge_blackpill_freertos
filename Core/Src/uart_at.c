@@ -3,6 +3,10 @@
 #include "uart_at.h"
 #include "uartRingBufDMA.h"
 #include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+
+#define SEND_RAW_AT_WAIT_FLAG (0x80)
 
 uint8_t cmd_buffer[20];
 uint8_t cmd_len = 0;
