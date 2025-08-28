@@ -1,5 +1,4 @@
 #include "cmsis_os.h"
-#include "cmsis_os2.h"
 #include "uart_at.h"
 #include "uartRingBufDMA.h"
 #include <stdio.h>
