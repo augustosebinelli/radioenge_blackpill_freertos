@@ -19,11 +19,16 @@ extern osTimerId_t ModemLedTimerHandle;
 extern osMessageQueueId_t uartQueueHandle;
 extern osTimerId_t DutyCycleTimerHandle;
 
-#define NUMBER_OF_STRINGS (2)
+#define NUMBER_OF_STRINGS (7)
 #define STRING_LENGTH (255)
 char gConfigCmds[NUMBER_OF_STRINGS][STRING_LENGTH + 1] = {
-    "AT\r\n",
-    "AT\r\n"
+    "AT+CFM=0",
+    "AT+APPKEY=d1:c0:89:9f:f8:c9:e7:0c:60:63:a1:c0:a8:ad:85:c7",
+    "AT+APPEUI=11:01:54:c4:e6:28:4b:e4:90:92:07:1e:dc:25:a6:1f",
+    "AT+CHMASK=0000:00FF:0000:0000:0004:0000",
+    "AT+ADR=1",
+    "AT+NJM=1",
+    "AT+JOIN"
     };
 
 
