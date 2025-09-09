@@ -1,6 +1,7 @@
 #include "cmsis_os.h"
 #include "stm32f4xx_hal.h"
 #include "radioenge_modem.h"
+#include "termistor.h"
 
 extern osTimerId_t PeriodicSendTimerHandle;
 extern osThreadId_t AppSendTaskHandle;
@@ -24,11 +25,23 @@ void AppSendTaskCode(void *argument)
     /* Infinite loop */    
     
 
+    
+uint32_t read;
+int32_t temp;
+uint8_t sendStr[20];
+
     while (1)
-    {        
-        LoRaWaitDutyCycle();       
-        //write code to read from sensors and send via LoRaWAN
+    {
+        HAL_ADC_Start(&hadc1);
+        HAL_ADC_PollForConversion(&hadc1, 100);
+        read = HAL_ADC_GetValue(&hadc1);
+        temp = DividerVoltageToDegreesCelsius(3300,(3300.0*read / 4095.0))*100;
+        sprintf(sendStr,"Temperature: %2d.%2d",temp/100,temp%100);
+        
+        LoRaSend(2,sendStr);
 
         osDelay(30000);
     }
+
+    
 }
