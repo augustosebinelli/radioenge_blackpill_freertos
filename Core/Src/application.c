@@ -19,28 +19,35 @@ void PeriodicSendTimerCallback(void *argument)
 {
 }
 
+    typedef struct {
+    uint32_t seq_no;
+    int32_t temp_oCx100;
+    } __attribute__((packed)) TEMPERATURE_OBJ_t;
+
 void AppSendTaskCode(void *argument)
 {
     /* USER CODE BEGIN 5 */
     /* Infinite loop */    
     
+        
+    uint32_t read;
+    TEMPERATURE_OBJ_t temp;
+    temp.seq_no = 0;
 
-    
-uint32_t read;
-int32_t temp;
-uint8_t sendStr[20];
+
 
     while (1)
     {
         HAL_ADC_Start(&hadc1);
         HAL_ADC_PollForConversion(&hadc1, 100);
         read = HAL_ADC_GetValue(&hadc1);
-        temp = DividerVoltageToDegreesCelsius(3300,(3300.0*read / 4095.0))*100;
-        sprintf(sendStr,"Temperature: %2d.%2d",temp/100,temp%100);
+        temp.seq_no++;
+        temp.temp_oCx100 = DividerVoltageToDegreesCelsius(3300,(3300.0*read / 4095.0))*100;
+        /*sprintf(sendStr,"Temperature: %2d.%2d",temp/100,temp%100);*/
         
-        LoRaSend(2,sendStr);
+        LoRaSendB(2, (uint8_t *)&temp, sizeof(TEMPERATURE_OBJ_t));
 
-        osDelay(30000);
+        osDelay(15000);
     }
 
     
