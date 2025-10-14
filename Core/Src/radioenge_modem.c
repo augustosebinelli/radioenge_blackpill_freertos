@@ -23,9 +23,10 @@ extern osTimerId_t DutyCycleTimerHandle;
 #define STRING_LENGTH (255)
 char gConfigCmds[NUMBER_OF_STRINGS][STRING_LENGTH + 1] = {
     "AT+CFM=0\n",
-    "AT+APPKEY=d1:c0:89:9f:f8:c9:e7:0c:60:63:a1:c0:a8:ad:85:c7\n",
-    "AT+APPEUI=11:01:54:c4:e6:28:4b:e4:90:92:07:1e:dc:25:a6:1f\n",
-    "AT+CHMASK=0000:00FF:0000:0000:0004:0000\n",
+    "AT+APPKEY=D1:C0:89:9F:F8:C9:E7:0C:60:63:A1:C0:A8:AD:85:C7\n",
+    //"AT+APPEUI=11:01:54:c4:e6:28:4b:e4:90:92:07:1e:dc:25:a6:1f\n",
+    "AT+APPEUI=00:00:00:00:00:00:00:00\n",
+    "AT+CHMASK=FF00:0000:0000:0000:0002:0000\n",
     "AT+ADR=1\n",
     "AT+NJM=1\n",
     "AT+JOIN\n"

@@ -23,7 +23,7 @@ void LoRaWAN_RxEventCallback(uint8_t *data, uint32_t length, uint32_t port, int3
     D* info;
     info=(D*)data;
     potencia=(*info).power_compressor;
-    aviso2=(*info).warning_status
+    aviso=(*info).warning_status;
     
 
 

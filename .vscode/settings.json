@@ -17,6 +17,16 @@
             "host": "labscgw.eletrica.eng.br",
             "port": 1883,
             "clientId": "vsmqtt_client_4e50"
+        },
+
+        {
+            "name": "TTN Student's Application",
+            "host": "nam1.cloud.thethings.network",
+            "port": 1883,
+            "username": "augustolarissa@ttn",
+            "password": "NNSXS.6XZU2PLT6XXJ2WPPLZLZV26HBKIIR3RP2G2YSWQ.GCO22PWC5RTRQUVM2YZ2WWP3QRX2YYYCOY7P2CKDXA5LOT5B3ZZQ",
+            "clientId": "augustolarissa_client"
         }
+
     ]
 }
