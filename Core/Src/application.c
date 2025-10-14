@@ -9,15 +9,29 @@ extern ADC_HandleTypeDef hadc1;
 extern osEventFlagsId_t ModemStatusFlagsHandle;
 extern TIM_HandleTypeDef htim3;
 
+uint16_t potencia;
+uint8_t aviso;
+
+typedef struct {
+    uint16_t power_compressor;
+    uint8_t warning_status;
+    } D;
 
 void LoRaWAN_RxEventCallback(uint8_t *data, uint32_t length, uint32_t port, int32_t rssi, int32_t snr)
 {
+
+    D* info;
+    info=(D*)data;
+    potencia=(*info).power_compressor;
+    aviso=(*info).warning_status
+    
+
 
 }
 
 void PeriodicSendTimerCallback(void *argument)
 {
-}
+}   
 
     typedef struct {
     uint32_t seq_no;
