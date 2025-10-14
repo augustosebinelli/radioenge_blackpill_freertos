@@ -8,6 +8,15 @@
         "string_view": "c",
         "uartringbufdma.h": "c",
         "semphr.h": "c",
-        "main.h": "c"
-    }
+        "main.h": "c",
+        "termistor.h": "c"
+    },
+    "vsmqtt.brokerProfiles": [
+        {
+            "name": "Profile 1",
+            "host": "labscgw.eletrica.eng.br",
+            "port": 1883,
+            "clientId": "vsmqtt_client_4e50"
+        }
+    ]
 }
