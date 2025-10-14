@@ -1,0 +1,211 @@
+ARM GAS  C:\Users\DAELT-~1\AppData\Local\Temp\ccmc3Lbb.s 			page 1
+
+
+   1              		.cpu cortex-m4
+   2              		.arch armv7e-m
+   3              		.fpu fpv4-sp-d16
+   4              		.eabi_attribute 27, 1
+   5              		.eabi_attribute 28, 1
+   6              		.eabi_attribute 20, 1
+   7              		.eabi_attribute 21, 1
+   8              		.eabi_attribute 23, 3
+   9              		.eabi_attribute 24, 1
+  10              		.eabi_attribute 25, 1
+  11              		.eabi_attribute 26, 1
+  12              		.eabi_attribute 30, 6
+  13              		.eabi_attribute 34, 1
+  14              		.eabi_attribute 18, 4
+  15              		.file	"termistor.c"
+  16              		.text
+  17              	.Ltext0:
+  18              		.cfi_sections	.debug_frame
+  19              		.file 1 "Core/Src/termistor.c"
+  20              		.global	__aeabi_f2d
+  21              		.global	__aeabi_d2f
+  22              		.global	__aeabi_dsub
+  23              		.section	.text.DividerVoltageToDegreesCelsius,"ax",%progbits
+  24              		.align	1
+  25              		.global	DividerVoltageToDegreesCelsius
+  26              		.syntax unified
+  27              		.thumb
+  28              		.thumb_func
+  30              	DividerVoltageToDegreesCelsius:
+  31              	.LFB0:
+   1:Core/Src/termistor.c **** #include <math.h>
+   2:Core/Src/termistor.c **** 
+   3:Core/Src/termistor.c **** /**
+   4:Core/Src/termistor.c ****  * @brief Converts the voltage from a voltage divider circuit to temperature in degrees Celsius.
+   5:Core/Src/termistor.c ****  * 
+   6:Core/Src/termistor.c ****  * This function uses the Steinhart-Hart equation to calculate the temperature of a thermistor
+   7:Core/Src/termistor.c ****  * based on the voltage measured from a voltage divider circuit.
+   8:Core/Src/termistor.c ****  * 
+   9:Core/Src/termistor.c ****  * Be careful when choosing the KY-013 voltage level. If 5000.0 millivolts (5.0 V) is used, bear in
+  10:Core/Src/termistor.c ****  * voltage on the STM32F411 ADC Pin must not exceed 3300.0 millivolts (3.3 V). Thus, the current fl
+  11:Core/Src/termistor.c ****  * circuit should not exceed 330 uA. So, if the thermistor resistance becomes lower than 5151.52 oh
+  12:Core/Src/termistor.c ****  * the ADC pin will be exceeded. For a 10 kohms NTC Thermistor, this represents a temperature highe
+  13:Core/Src/termistor.c ****  * 
+  14:Core/Src/termistor.c ****  * @param Pin1Voltage_mV The supply voltage of the KY-013 (Pin 1, which has a - sign), in millivolt
+  15:Core/Src/termistor.c ****  * @param readVoltage_mV The voltage over the fixed resistor (divider_R) read on Pin 2, in millivol
+  16:Core/Src/termistor.c ****  * 
+  17:Core/Src/termistor.c ****  * @return The temperature in degrees Celsius.
+  18:Core/Src/termistor.c ****  */
+  19:Core/Src/termistor.c **** float DividerVoltageToDegreesCelsius(float Pin1Voltage_mV, float readVoltage_mV)
+  20:Core/Src/termistor.c **** {
+  32              		.loc 1 20 1
+  33              		.cfi_startproc
+  34              		@ args = 0, pretend = 0, frame = 40
+  35              		@ frame_needed = 1, uses_anonymous_args = 0
+  36 0000 80B5     		push	{r7, lr}
+  37              	.LCFI0:
+  38              		.cfi_def_cfa_offset 8
+ARM GAS  C:\Users\DAELT-~1\AppData\Local\Temp\ccmc3Lbb.s 			page 2
+
+
+  39              		.cfi_offset 7, -8
+  40              		.cfi_offset 14, -4
+  41 0002 8AB0     		sub	sp, sp, #40
+  42              	.LCFI1:
+  43              		.cfi_def_cfa_offset 48
+  44 0004 00AF     		add	r7, sp, #0
+  45              	.LCFI2:
+  46              		.cfi_def_cfa_register 7
+  47 0006 87ED010A 		vstr.32	s0, [r7, #4]
+  48 000a C7ED000A 		vstr.32	s1, [r7]
+  21:Core/Src/termistor.c ****     const float cA = 0.001129148; // Steinhart-Hart Equation coefficient A
+  49              		.loc 1 21 17
+  50 000e 344B     		ldr	r3, .L3+8
+  51 0010 7B62     		str	r3, [r7, #36]	@ float
+  22:Core/Src/termistor.c ****     const float cB = 0.000234125; // Steinhart-Hart Equation coefficient B
+  52              		.loc 1 22 17
+  53 0012 344B     		ldr	r3, .L3+12
+  54 0014 3B62     		str	r3, [r7, #32]	@ float
+  23:Core/Src/termistor.c ****     const float cC = 0.0000000876741; // Steinhart-Hart Equation coefficient C
+  55              		.loc 1 23 17
+  56 0016 344B     		ldr	r3, .L3+16
+  57 0018 FB61     		str	r3, [r7, #28]	@ float
+  24:Core/Src/termistor.c ****     const float divider_R = 10e3; // Value of the KY-013 fixed resistor (10k ohms)
+  58              		.loc 1 24 17
+  59 001a 344B     		ldr	r3, .L3+20
+  60 001c BB61     		str	r3, [r7, #24]	@ float
+  25:Core/Src/termistor.c ****     float thermistor_R, logThermistor_R; // Thermistor resistance and the natural logarithm of the 
+  26:Core/Src/termistor.c ****     float tempThermistor;    
+  27:Core/Src/termistor.c **** 
+  28:Core/Src/termistor.c ****     // Calculate the thermistor resistance
+  29:Core/Src/termistor.c ****     thermistor_R = (Pin1Voltage_mV * divider_R - divider_R * readVoltage_mV) / (readVoltage_mV);   
+  61              		.loc 1 29 36
+  62 001e 97ED017A 		vldr.32	s14, [r7, #4]
+  63 0022 D7ED067A 		vldr.32	s15, [r7, #24]
+  64 0026 27EE277A 		vmul.f32	s14, s14, s15
+  65              		.loc 1 29 60
+  66 002a D7ED066A 		vldr.32	s13, [r7, #24]
+  67 002e D7ED007A 		vldr.32	s15, [r7]
+  68 0032 66EEA77A 		vmul.f32	s15, s13, s15
+  69              		.loc 1 29 48
+  70 0036 77EE676A 		vsub.f32	s13, s14, s15
+  71              		.loc 1 29 18
+  72 003a 97ED007A 		vldr.32	s14, [r7]
+  73 003e C6EE877A 		vdiv.f32	s15, s13, s14
+  74 0042 C7ED057A 		vstr.32	s15, [r7, #20]
+  30:Core/Src/termistor.c ****     // Calculate the natural logarithm of the thermistor resistance
+  31:Core/Src/termistor.c ****     logThermistor_R = log(thermistor_R);    
+  75              		.loc 1 31 23
+  76 0046 7869     		ldr	r0, [r7, #20]	@ float
+  77 0048 FFF7FEFF 		bl	__aeabi_f2d
+  78 004c 0246     		mov	r2, r0
+  79 004e 0B46     		mov	r3, r1
+  80 0050 43EC102B 		vmov	d0, r2, r3
+  81 0054 FFF7FEFF 		bl	log
+  82 0058 53EC102B 		vmov	r2, r3, d0
+  83              		.loc 1 31 21 discriminator 1
+  84 005c 1046     		mov	r0, r2
+ARM GAS  C:\Users\DAELT-~1\AppData\Local\Temp\ccmc3Lbb.s 			page 3
+
+
+  85 005e 1946     		mov	r1, r3
+  86 0060 FFF7FEFF 		bl	__aeabi_d2f
+  87 0064 0346     		mov	r3, r0	@ float
+  88 0066 3B61     		str	r3, [r7, #16]	@ float
+  32:Core/Src/termistor.c ****     // Calculate the temperature in Kelvin using the Steinhart-Hart Equation
+  33:Core/Src/termistor.c ****     tempThermistor = 1.0 / (cA + cB * logThermistor_R + cC * logThermistor_R * logThermistor_R * lo
+  89              		.loc 1 33 37
+  90 0068 97ED087A 		vldr.32	s14, [r7, #32]
+  91 006c D7ED047A 		vldr.32	s15, [r7, #16]
+  92 0070 27EE277A 		vmul.f32	s14, s14, s15
+  93              		.loc 1 33 32
+  94 0074 D7ED097A 		vldr.32	s15, [r7, #36]
+  95 0078 37EE277A 		vadd.f32	s14, s14, s15
+  96              		.loc 1 33 60
+  97 007c D7ED076A 		vldr.32	s13, [r7, #28]
+  98 0080 D7ED047A 		vldr.32	s15, [r7, #16]
+  99 0084 66EEA76A 		vmul.f32	s13, s13, s15
+ 100              		.loc 1 33 78
+ 101 0088 D7ED047A 		vldr.32	s15, [r7, #16]
+ 102 008c 66EEA76A 		vmul.f32	s13, s13, s15
+ 103              		.loc 1 33 96
+ 104 0090 D7ED047A 		vldr.32	s15, [r7, #16]
+ 105 0094 66EEA77A 		vmul.f32	s15, s13, s15
+ 106              		.loc 1 33 55
+ 107 0098 37EE277A 		vadd.f32	s14, s14, s15
+ 108              		.loc 1 33 20
+ 109 009c F7EE006A 		vmov.f32	s13, #1.0e+0
+ 110 00a0 C6EE877A 		vdiv.f32	s15, s13, s14
+ 111 00a4 C7ED037A 		vstr.32	s15, [r7, #12]
+  34:Core/Src/termistor.c ****     // Convert Kelvin to Celsius and return
+  35:Core/Src/termistor.c ****     
+  36:Core/Src/termistor.c ****     return tempThermistor - 273.15;
+ 112              		.loc 1 36 27
+ 113 00a8 F868     		ldr	r0, [r7, #12]	@ float
+ 114 00aa FFF7FEFF 		bl	__aeabi_f2d
+ 115 00ae 0AA3     		adr	r3, .L3
+ 116 00b0 D3E90023 		ldrd	r2, [r3]
+ 117 00b4 FFF7FEFF 		bl	__aeabi_dsub
+ 118 00b8 0246     		mov	r2, r0
+ 119 00ba 0B46     		mov	r3, r1
+ 120 00bc 1046     		mov	r0, r2
+ 121 00be 1946     		mov	r1, r3
+ 122 00c0 FFF7FEFF 		bl	__aeabi_d2f
+ 123 00c4 0346     		mov	r3, r0	@ float
+ 124              		.loc 1 36 27 is_stmt 0 discriminator 1
+ 125 00c6 07EE903A 		vmov	s15, r3
+  37:Core/Src/termistor.c **** }...
+ 126              		.loc 1 37 1 is_stmt 1
+ 127 00ca B0EE670A 		vmov.f32	s0, s15
+ 128 00ce 2837     		adds	r7, r7, #40
+ 129              	.LCFI3:
+ 130              		.cfi_def_cfa_offset 8
+ 131 00d0 BD46     		mov	sp, r7
+ 132              	.LCFI4:
+ 133              		.cfi_def_cfa_register 13
+ 134              		@ sp needed
+ 135 00d2 80BD     		pop	{r7, pc}
+ARM GAS  C:\Users\DAELT-~1\AppData\Local\Temp\ccmc3Lbb.s 			page 4
+
+
+ 136              	.L4:
+ 137 00d4 AFF30080 		.align	3
+ 138              	.L3:
+ 139 00d8 66666666 		.word	1717986918
+ 140 00dc 66127140 		.word	1081152102
+ 141 00e0 EBFF933A 		.word	982777835
+ 142 00e4 737F7539 		.word	964001651
+ 143 00e8 5947BC33 		.word	867977049
+ 144 00ec 00401C46 		.word	1176256512
+ 145              		.cfi_endproc
+ 146              	.LFE0:
+ 148              		.text
+ 149              	.Letext0:
+ 150              		.file 2 "C:/tools/arm-gnu-toolchain-13.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/include/m
+ARM GAS  C:\Users\DAELT-~1\AppData\Local\Temp\ccmc3Lbb.s 			page 5
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 termistor.c
+C:\Users\DAELT-~1\AppData\Local\Temp\ccmc3Lbb.s:24     .text.DividerVoltageToDegreesCelsius:00000000 $t
+C:\Users\DAELT-~1\AppData\Local\Temp\ccmc3Lbb.s:30     .text.DividerVoltageToDegreesCelsius:00000000 DividerVoltageToDegreesCelsius
+C:\Users\DAELT-~1\AppData\Local\Temp\ccmc3Lbb.s:139    .text.DividerVoltageToDegreesCelsius:000000d8 $d
+
+UNDEFINED SYMBOLS
+__aeabi_f2d
+__aeabi_d2f
+__aeabi_dsub
+log
